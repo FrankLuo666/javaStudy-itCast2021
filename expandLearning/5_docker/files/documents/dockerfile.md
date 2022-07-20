@@ -1,4 +1,40 @@
-## Dockerfile
+# Docker 镜像原理
+### 思考：
+```shell
+Docker 镜像本质是什么？
+Docker 中一个centos镜像为什么只有200MB，而一个centos操作系统的iso文件要几个个G？
+Docker 中一个tomcat镜像为什么有500MB，而一个tomcat安装包只有70多MB？
+```
+![dockerImage](./imgs/dockerImage.png)
+
+
+### 操作系统组成部分：
+* 进程调度子系统
+* 进程通信子系统
+* 内存管理子系统
+* 设备管理子系统
+* <font color='red'>文件管理子系统</font>
+* 网络通信子系统
+* 作业控制子系统
+
+### Linux文件系统由bootfs和rootfs两部分组成
+* bootfs：包含bootloader（引导加载程序）和 kernel（内核）
+* rootfs： root文件系统，包含的就是典型 Linux 系统中的/dev，/proc，/bin，/etc等标准目录和文件
+* 不同的linux发行版，bootfs基本一样，而rootfs不同，如ubuntu，centos等
+
+### Docker 镜像原理
+* Docker镜像是由特殊的文件系统叠加而成
+* 最底端是 bootfs，并使用宿主机的bootfs
+* 第二层是 root文件系统rootfs,称为base image
+* 然后再往上可以叠加其他的镜像文件
+* 统一文件系统（Union File System）技术能够将不同的层整合成一个文件系统，为这些层提供了一个统一的视角，这样就隐藏了多层的存在，在用户的角度看来，只存在一个文件系统。
+* 一个镜像可以放在另一个镜像的上面。位于下面的镜像称为父镜像，最底部的镜像成为基础镜像。
+* 当从一个镜像启动容器时，Docker会在最顶层加载一个读写文件系统作为容器
+
+![Docker 镜像原理图](./imgs/imageStructrue.png)
+
+
+# Dockerfile
 
 | 关键字      | 作用                     | 备注                                                         |
 | ----------- | ------------------------ | ------------------------------------------------------------ |

@@ -50,11 +50,11 @@ docker run -it --name=c4 -v ~/data:/root/data centos:7 /bin/bash
 ### 配置数据卷容器
 1. 创建启动c3数据卷容器，使用 –v 参数 设置数据卷
 ```shell
-docker run –it --name=c3 –v /volume centos:7 /bin/bash
+docker run -it --name=c3 -v /volume centos:7
 ```
 2. 创建启动 c1 c2 容器，使用 –-volumes-from 参数 设置数据卷
 ```shell
-docker run –it --name=c1 --volumes-from c3 centos:7 /bin/bash
-docker run –it --name=c2 --volumes-from c3 centos:7 /bin/bash  
+docker run -it --name=c1 --volumes-from c3 centos:7 /bin/bash
+docker run -it --name=c2 --volumes-from c3 centos:7 /bin/bash  
 ```
 

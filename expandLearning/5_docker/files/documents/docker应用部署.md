@@ -18,8 +18,8 @@ docker pull mysql:5.6
 
 ```shell
 # 在/root目录下创建mysql目录用于存储mysql数据信息
-mkdir ~/mysql
-cd ~/mysql
+mkdir -p ~/dockerSoftware/mysql
+cd ~/dockerSoftware/mysql
 ```
 
 ```shell
@@ -45,12 +45,35 @@ mysql:5.6
 4. 进入容器，操作mysql
 
 ```shell
-docker exec –it c_mysql /bin/bash
+docker exec -it c_mysql /bin/bash
+#登入mysql
+mysql -uroot -p123456
+#mysql命令，显示数据库
+show databases;
+#创建数据库
+create database db1;
+#使用数据库
+use db1;
+#显示所有表
+show tables;
+
 ```
 
 5. 使用外部机器连接容器中的mysql
 
-![1573636765632](.\imgs\1573636765632.png)
+![1573636765632](./imgs/1573636765632.png)
+
+6. 操作mysql
+```shell
+use db1;
+create table user(
+		id int primary key,
+        username varchar(32),
+        password varchar(32)
+);
+INSERT INTO `db1`.`user` (`id`, `username`, `password`) VALUES ('1', 'test', '123');
+SELECT * FROM db1.user;
+```
 
 
 
@@ -87,15 +110,15 @@ docker pull tomcat
 
 ```shell
 # 在/root目录下创建tomcat目录用于存储tomcat数据信息
-mkdir ~/tomcat
-cd ~/tomcat
+mkdir -p ~/dockerSoftware/tomcat
+cd ~/dockerSoftware/tomcat
 ```
 
 ```shell
 docker run -id --name=c_tomcat \
 -p 8080:8080 \
 -v $PWD:/usr/local/tomcat/webapps \
-tomcat 
+tomcat
 ```
 
 - 参数说明：
@@ -103,11 +126,17 @@ tomcat
   
     **-v $PWD:/usr/local/tomcat/webapps：**将主机中当前目录挂载到容器的webapps
 
+4. 在宿主机tomcat目录下写入一个html文件
+```shell
+mkdir test
+cd test 
+vim a.html
+# 写入： <h1>hello tomcat docker</h1>
+```
 
+6. 使用外部机器访问tomcat
 
-4. 使用外部机器访问tomcat
-
-![1573649804623](./imgs\1573649804623.png)
+![1573649804623](./imgs/1573649804623.png)
 
 
 
@@ -143,15 +172,13 @@ docker pull nginx
 
 ```shell
 # 在/root目录下创建nginx目录用于存储nginx数据信息
-mkdir ~/nginx
-cd ~/nginx
-mkdir conf
-cd conf
-# 在~/nginx/conf/下创建nginx.conf文件,粘贴下面内容
+mkdir -p ~/dockerSoftware/nginx/conf
+cd ~/dockerSoftware/nginx/conf
+# 在~/dockerSoftware/nginx/conf/下创建nginx.conf文件,粘贴下面内容
 vim nginx.conf
 ```
-```shell
 
+```shell
 user  nginx;
 worker_processes  1;
 
@@ -183,14 +210,13 @@ http {
 
     include /etc/nginx/conf.d/*.conf;
 }
-
-
 ```
 
 
 
 
 ```shell
+cd ~/dockerSoftware/nginx
 docker run -id --name=c_nginx \
 -p 80:80 \
 -v $PWD/conf/nginx.conf:/etc/nginx/nginx.conf \
@@ -204,9 +230,16 @@ nginx
   - **-v $PWD/conf/nginx.conf:/etc/nginx/nginx.conf**：将主机当前目录下的 /conf/nginx.conf 挂载到容器的 :/etc/nginx/nginx.conf。配置目录
   - **-v $PWD/logs:/var/log/nginx**：将主机当前目录下的 logs 目录挂载到容器的/var/log/nginx。日志目录
 
-4. 使用外部机器访问nginx
+4. 在宿主机html目录下写入一个html文件
+```shell
+cd ~/dockerSoftware/nginx/html/
+vim index.html
+# 写入： <h1>hello nginx docker</h1>
+```
 
-![1573652396669](.\imgs\1573652396669.png)
+5. 使用外部机器访问nginx
+
+![1573652396669](./imgs/1573652396669.png)
 
 
 
@@ -236,6 +269,7 @@ docker pull redis:5.0
 
 ```shell
 docker run -id --name=c_redis -p 6379:6379 redis:5.0
+docker start c_redis
 ```
 
 4. 使用外部机器连接redis
